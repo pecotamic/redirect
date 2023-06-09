@@ -1,0 +1,19 @@
+{
+    "name": "pecotamic/redirects",
+    "autoload": {
+        "psr-4": {
+            "Pecotamic\\Redirects\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Redirects",
+            "description": "Redirects addon"
+        },
+        "laravel": {
+            "providers": [
+                "Pecotamic\\Redirects\\ServiceProvider"
+            ]
+        }
+    }
+}
