@@ -15,11 +15,13 @@ class RedirectionsHandler
         $url = Str::substr(Str::finish($url, '/'), 0, -1);
 
         if ($redirect = Data::get($request)->redirectMatching(url: $url)) {
+            http_response_code((int) $redirect->responseCode());
+
             if (in_array((int) $redirect->responseCode(), [301, 302])) {
-                return redirect($redirect->target(), (int) $redirect->responseCode());
+                header('Location: '.$redirect->target());
             }
 
-            abort((int) $redirect->responseCode());
+            exit();
         }
 
         return $next($request);
