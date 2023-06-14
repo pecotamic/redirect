@@ -1,6 +1,6 @@
 <?php
 
-namespace Pecotamic\Redirects\Data;
+namespace Pecotamic\Redirect\Data;
 
 use Statamic\Support\Traits\FluentlyGetsAndSets;
 

@@ -1,18 +1,18 @@
 {
-    "name": "pecotamic/redirects",
+    "name": "pecotamic/redirect",
     "autoload": {
         "psr-4": {
-            "Pecotamic\\Redirects\\": "src"
+            "Pecotamic\\Redirect\\": "src"
         }
     },
     "extra": {
         "statamic": {
-            "name": "Redirects",
-            "description": "Redirects addon"
+            "name": "Pecotamic Redirect",
+            "description": "Statamic addon for 301 and 302 redirects and 403, 404 and 410 aborts"
         },
         "laravel": {
             "providers": [
-                "Pecotamic\\Redirects\\ServiceProvider"
+                "Pecotamic\\Redirect\\ServiceProvider"
             ]
         }
     }

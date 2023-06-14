@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Pecotamic\Redirects\Data;
+namespace Pecotamic\Redirect\Data;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Pecotamic\Redirects\Blueprints\RedirectsBlueprint;
+use Pecotamic\Redirect\Blueprints\RedirectsBlueprint;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;

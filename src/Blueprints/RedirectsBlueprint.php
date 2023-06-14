@@ -1,6 +1,6 @@
 <?php
 
-namespace Pecotamic\Redirects\Blueprints;
+namespace Pecotamic\Redirect\Blueprints;
 
 use Statamic\Facades\Blueprint;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Pecotamic\Redirects;
+namespace Pecotamic\Redirect;
 
-use Pecotamic\Redirects\Data\Data;
-use Pecotamic\Redirects\Http\Middleware\RedirectionsHandler;
+use Pecotamic\Redirect\Data\Data;
+use Pecotamic\Redirect\Http\Middleware\RedirectionsHandler;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 

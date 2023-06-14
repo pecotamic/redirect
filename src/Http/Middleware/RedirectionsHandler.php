@@ -1,10 +1,10 @@
 <?php
 
-namespace Pecotamic\Redirects\Http\Middleware;
+namespace Pecotamic\Redirect\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Pecotamic\Redirects\Data\Data;
+use Pecotamic\Redirect\Data\Data;
 use Statamic\Support\Str;
 
 class RedirectionsHandler
