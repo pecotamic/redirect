@@ -15,6 +15,7 @@ class ServiceProvider extends AddonServiceProvider
 
         Statamic::booted(function () {
             app('router')->prependMiddlewareToGroup('statamic.web', RedirectionsHandler::class);
+            app('router')->prependMiddlewareToGroup('web', RedirectionsHandler::class);
 
             return $this->bootGlobalSet();
         });
