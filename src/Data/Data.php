@@ -29,7 +29,7 @@ class Data
 
     public static function get(Request $request)
     {
-        $site = $request->site ? Site::get($request->site) : Site::selected();
+        $site = Site::get($request->site ?? '') ?? Site::selected();
 
         return new self(GlobalSet::findByHandle(self::HANDLE)
             ->localizations()[$site->handle()]->data());
