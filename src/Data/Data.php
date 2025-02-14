@@ -23,7 +23,7 @@ class Data
     public function redirects(): \Generator
     {
         foreach ($this->data['redirects'] ?? [] as $data) {
-            if ($data['enabled']) {
+            if ($data['enabled'] ?? true) {
                 yield new Redirect($data);
             }
         }
