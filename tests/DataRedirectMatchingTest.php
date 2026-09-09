@@ -40,15 +40,6 @@ class DataRedirectMatchingTest extends TestCase
         $this->assertSame('/news', $redirect->target());
     }
 
-    public function test_it_skips_disabled_redirects(): void
-    {
-        $data = $this->dataWith([
-            $this->redirect(requestUri: '/old', matchType: 'exact', target: '/new', enabled: false),
-        ]);
-
-        $this->assertNull($data->redirectMatching('/old'));
-    }
-
     public function test_exact_match_takes_priority_over_an_earlier_starts_with_match(): void
     {
         $data = $this->dataWith([
@@ -72,13 +63,12 @@ class DataRedirectMatchingTest extends TestCase
 
     private function dataWith(array $redirects): Data
     {
-        return new Data(new Collection(['redirects' => $redirects]));
+        return new Data(new Collection($redirects));
     }
 
-    private function redirect(string $requestUri, string $matchType, ?string $target, int $responseCode = 301, bool $enabled = true): array
+    private function redirect(string $requestUri, string $matchType, ?string $target, int $responseCode = 301): array
     {
         return [
-            'enabled' => $enabled,
             'request_uri' => $requestUri,
             'match_type' => $matchType,
             'response_code' => $responseCode,

@@ -30,10 +30,8 @@ class Data
 
     public function redirects(): \Generator
     {
-        foreach ($this->data['redirects'] ?? [] as $data) {
-            if ($data['enabled'] ?? true) {
-                yield new Redirect($data);
-            }
+        foreach ($this->data as $data) {
+            yield new Redirect($data);
         }
     }
 
@@ -41,8 +39,14 @@ class Data
     {
         $site = Site::get($request->site ?? '') ?? Site::selected();
 
-        return new self(GlobalSet::findByHandle(self::HANDLE)
-            ->localizations()[$site->handle()]->data());
+        $entries = CollectionAPI::findByHandle(self::COLLECTION_HANDLE)
+            ->queryEntries()
+            ->where('site', $site->handle())
+            ->where('published', true)
+            ->get()
+            ->map(fn ($entry) => $entry->data()->only(['request_uri', 'match_type', 'response_code', 'target'])->all());
+
+        return new self($entries);
     }
 
     public static function setup()
