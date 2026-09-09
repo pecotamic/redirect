@@ -19,9 +19,9 @@ The package requires PHP 8.2+. It will auto register.
 
 ## Usage
 
-Installing the addon adds a **Weiterleitungen** (Redirects) entry to the Globals section of the control panel. Each rule has:
+Installing the addon adds a **Redirects** entry to the Globals section of the control panel. Its field labels follow the control panel's active language (German and English are built in). Each rule has:
 
-* **Request-URI**: the incoming path to match, e.g. `/old-page`
-* **Übereinstimmung** (Match type): `Genau` (exact) matches the path exactly, `Beginnt mit` (starts with) matches any path starting with it
-* **Weiterleitung** (Response): the HTTP status code to respond with &mdash; `301` (Moved Permanently), `302` (Moved Temporarily), `403` (Forbidden), `404` (Not Found) or `410` (Gone)
-* **Ziel** (Target): the redirect destination, required for `301`/`302`. Accepts a relative path (e.g. `/new-page`) or an absolute `http(s)://` URL
+* **Request URI**: the incoming path to match, e.g. `/old-page`
+* **Match type**: `Exact` matches the path exactly, `Starts with` matches any path starting with it
+* **Response**: the HTTP status code to respond with &mdash; `301` (Moved Permanently), `302` (Moved Temporarily), `403` (Forbidden), `404` (Not Found) or `410` (Gone)
+* **Target**: the redirect destination, required for `301`/`302`. Accepts a relative path (e.g. `/new-page`) or an absolute `http(s)://` URL

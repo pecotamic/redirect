@@ -43,18 +43,13 @@ class Data
     {
         if (! GlobalSet::findByHandle(self::HANDLE)) {
             $globalSet = GlobalSet::make(self::HANDLE)
-                ->title(__('redirect::messages.global_set_title'))
+                ->title('Redirects')
                 ->save();
 
             $globalSet->makeLocalization(Site::default()->handle())->save();
         }
 
-        if (! Blueprint::find('globals.'.self::HANDLE)) {
-            RedirectsBlueprint::make()
-                ->setHandle(self::HANDLE)
-                ->setNamespace('globals')
-                ->save();
-        }
+        Blueprint::setFallback('globals.'.self::HANDLE, fn () => RedirectsBlueprint::make());
     }
 
     public function redirectMatching(string $url): ?Redirect

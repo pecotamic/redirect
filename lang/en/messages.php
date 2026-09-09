@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'global_set_title' => 'Redirects',
     'section_display' => 'Redirects',
     'redirects_field_display' => 'Redirects',
     'redirect_set_display' => 'Redirect',

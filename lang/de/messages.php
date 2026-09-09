@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'global_set_title' => 'Weiterleitungen',
     'section_display' => 'Weiterleitungen',
     'redirects_field_display' => 'Weiterleitungen',
     'redirect_set_display' => 'Weiterleitung',
