@@ -104,7 +104,11 @@ class RedirectsBlueprint extends Blueprint
                                                     'instructions_position' => 'above',
                                                     'visibility' => 'visible',
                                                     'hide_display' => false,
-                                                    'validate' => ['sometimes'],
+                                                    'validate' => [
+                                                        'nullable',
+                                                        'required_if:response_code,301,302',
+                                                        'regex:/^(\/\S*|https?:\/\/\S+)$/',
+                                                    ],
                                                     'width' => 66,
                                                     'if_any' => ['response_code' => 'contains_any 301, 302'],
                                                 ],
