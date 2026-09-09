@@ -16,6 +16,10 @@ class Data
 {
     private const HANDLE = 'pecotamic_redirects';
 
+    private array|null $exactRedirects = null;
+
+    private array|null $prefixRedirects = null;
+
     public function __construct(private Collection $data)
     {
     }
@@ -56,15 +60,35 @@ class Data
 
     public function redirectMatching(string $url): Redirect|null
     {
-        foreach ($this->redirects() as $redirect) {
-            if (match ($redirect->matchType()) {
-                Redirect::MATCH_TYPE_EXACT => strcasecmp($redirect->requestUri(), $url) === 0,
-                Redirect::MATCH_TYPE_STARTS_WITH => Str::startsWith($url, $redirect->requestUri()),
-            }) {
+        $this->indexRedirects();
+
+        if ($redirect = $this->exactRedirects[Str::lower($url)] ?? null) {
+            return $redirect;
+        }
+
+        foreach ($this->prefixRedirects as $redirect) {
+            if (Str::startsWith($url, $redirect->requestUri())) {
                 return $redirect;
             }
         }
 
         return null;
+    }
+
+    private function indexRedirects(): void
+    {
+        if ($this->exactRedirects !== null) {
+            return;
+        }
+
+        $this->exactRedirects = [];
+        $this->prefixRedirects = [];
+
+        foreach ($this->redirects() as $redirect) {
+            match ($redirect->matchType()) {
+                Redirect::MATCH_TYPE_EXACT => $this->exactRedirects[Str::lower($redirect->requestUri())] = $redirect,
+                Redirect::MATCH_TYPE_STARTS_WITH => $this->prefixRedirects[] = $redirect,
+            };
+        }
     }
 }
