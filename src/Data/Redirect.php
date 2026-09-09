@@ -18,7 +18,7 @@ class Redirect
 
     protected int $responseCode = 301;
 
-    protected string|null $target;
+    protected ?string $target;
 
     public function __construct(array $data)
     {

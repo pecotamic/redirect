@@ -16,13 +16,11 @@ class Data
 {
     private const HANDLE = 'pecotamic_redirects';
 
-    private array|null $exactRedirects = null;
+    private ?array $exactRedirects = null;
 
-    private array|null $prefixRedirects = null;
+    private ?array $prefixRedirects = null;
 
-    public function __construct(private Collection $data)
-    {
-    }
+    public function __construct(private Collection $data) {}
 
     public function redirects(): \Generator
     {
@@ -59,7 +57,7 @@ class Data
         }
     }
 
-    public function redirectMatching(string $url): Redirect|null
+    public function redirectMatching(string $url): ?Redirect
     {
         $this->indexRedirects();
 
