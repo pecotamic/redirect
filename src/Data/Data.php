@@ -6,8 +6,12 @@ namespace Pecotamic\Redirect\Data;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
+use Pecotamic\Redirect\Blueprints\RedirectBlueprint;
 use Pecotamic\Redirect\Blueprints\RedirectsBlueprint;
+use Statamic\Events\EntryBlueprintFound;
 use Statamic\Facades\Blueprint;
+use Statamic\Facades\Collection as CollectionAPI;
 use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
 use Statamic\Support\Str;
@@ -15,6 +19,8 @@ use Statamic\Support\Str;
 class Data
 {
     private const HANDLE = 'pecotamic_redirects';
+
+    private const COLLECTION_HANDLE = 'redirects';
 
     private ?array $exactRedirects = null;
 
@@ -50,6 +56,34 @@ class Data
         }
 
         Blueprint::setFallback('globals.'.self::HANDLE, fn () => RedirectsBlueprint::make());
+
+        if (! CollectionAPI::findByHandle(self::COLLECTION_HANDLE)) {
+            CollectionAPI::make(self::COLLECTION_HANDLE)
+                ->title('Redirects')
+                ->sites(Site::all()->map->handle())
+                ->requiresSlugs(false)
+                ->titleFormats('{{ request_uri }}')
+                ->save();
+        }
+
+        if (! Blueprint::find('collections.'.self::COLLECTION_HANDLE.'.redirect')) {
+            RedirectBlueprint::make()
+                ->setHandle('redirect')
+                ->setNamespace('collections.'.self::COLLECTION_HANDLE)
+                ->save();
+        }
+
+        // The entry blueprint is persisted to disk (Statamic discovers collection
+        // entry blueprints purely via a directory scan, with no fallback-closure
+        // mechanism like globals have). Refresh its field labels on every request
+        // so they still follow the current locale instead of staying frozen at
+        // whatever they were when the file was first written.
+        Event::listen(EntryBlueprintFound::class, function (EntryBlueprintFound $event) {
+            if ($event->blueprint->namespace() === 'collections.'.self::COLLECTION_HANDLE
+                && $event->blueprint->handle() === 'redirect') {
+                $event->blueprint->setContents(RedirectBlueprint::make()->contents());
+            }
+        });
     }
 
     public function redirectMatching(string $url): ?Redirect
