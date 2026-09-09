@@ -3,6 +3,7 @@
 namespace Pecotamic\Redirect\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Pecotamic\Redirect\Data\Data;
 use Statamic\Support\Str;
@@ -15,13 +16,13 @@ class RedirectionsHandler
         $url = Str::substr(Str::finish($url, '/'), 0, -1);
 
         if ($redirect = Data::get($request)->redirectMatching(url: $url)) {
-            http_response_code((int) $redirect->responseCode());
+            $responseCode = (int) $redirect->responseCode();
 
-            if (in_array((int) $redirect->responseCode(), [301, 302])) {
-                header('Location: '.$redirect->target());
+            if (in_array($responseCode, [301, 302])) {
+                return new RedirectResponse($redirect->target(), $responseCode);
             }
 
-            exit();
+            abort($responseCode);
         }
 
         return $next($request);
