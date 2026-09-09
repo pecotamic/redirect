@@ -11,6 +11,7 @@ use Pecotamic\Redirect\Blueprints\RedirectBlueprint;
 use Statamic\Events\EntryBlueprintFound;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Collection as CollectionAPI;
+use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Site;
 use Statamic\Support\Str;
 
@@ -73,6 +74,18 @@ class Data
                 && $event->blueprint->handle() === 'redirect') {
                 $event->blueprint->setContents(RedirectBlueprint::make()->contents());
             }
+        });
+
+        // Give the collection its own top-level nav entry instead of leaving it
+        // in the general "Collections" list, where it would sit alongside actual
+        // content collections like blog posts or pages.
+        Nav::extend(function ($nav) {
+            $nav->remove('Content', 'Collections', 'Redirects');
+
+            $nav->content('Redirects')
+                ->route('collections.show', self::COLLECTION_HANDLE)
+                ->icon('link')
+                ->can('view', CollectionAPI::findByHandle(self::COLLECTION_HANDLE));
         });
     }
 

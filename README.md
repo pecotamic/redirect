@@ -19,7 +19,7 @@ The package requires PHP 8.2+. It will auto register.
 
 ## Usage
 
-Installing the addon adds a **Redirects** collection to the control panel, with one entry per redirect rule &mdash; so the list stays fast and searchable even with a large number of redirects. Its field labels follow the control panel's active language (German and English are built in). Each rule has:
+Installing the addon adds a **Redirects** entry of its own to the control panel navigation (it's a Collection under the hood, but kept out of the general Collections list to avoid mixing it in with your actual content), with one entry per redirect rule &mdash; so the list stays fast and searchable even with a large number of redirects. Its field labels follow the control panel's active language (German and English are built in). Each rule has:
 
 * **Request URI**: the incoming path to match, e.g. `/old-page`
 * **Match type**: `Exact` matches the path exactly, `Starts with` matches any path starting with it
