@@ -45,7 +45,7 @@ class Data
     {
         if (! GlobalSet::findByHandle(self::HANDLE)) {
             GlobalSet::make(self::HANDLE)
-                ->title('Weiterleitungen')
+                ->title(__('redirect::messages.global_set_title'))
                 ->makeLocalization(Site::default()->handle())
                 ->save();
         }

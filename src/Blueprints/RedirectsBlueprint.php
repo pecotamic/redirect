@@ -11,20 +11,20 @@ class RedirectsBlueprint extends Blueprint
         return Blueprint::make()->setContents([
             'sections' => [
                 [
-                    'display' => 'Redirections',
+                    'display' => __('redirect::messages.section_display'),
                     'fields' => [
                         [
                             'handle' => 'redirects',
                             'field' => [
                                 'sets' => [
                                     'redirect' => [
-                                        'display' => 'Weiterleitung',
+                                        'display' => __('redirect::messages.redirect_set_display'),
                                         'fields' => [
                                             [
                                                 'handle' => 'request_uri',
                                                 'field' => [
                                                     'input_type' => 'text',
-                                                    'display' => 'Request-URI',
+                                                    'display' => __('redirect::messages.request_uri_display'),
                                                     'listable' => 'hidden',
                                                     'placeholder' => '/...',
                                                     'antlers' => false,
@@ -40,8 +40,8 @@ class RedirectsBlueprint extends Blueprint
                                                 'handle' => 'match_type',
                                                 'field' => [
                                                     'options' => [
-                                                        'exact' => 'Genau',
-                                                        'starts_with' => 'Beginnt mit',
+                                                        'exact' => __('redirect::messages.match_type_option_exact'),
+                                                        'starts_with' => __('redirect::messages.match_type_option_starts_with'),
                                                     ],
                                                     'taggable' => false,
                                                     'push_tags' => false,
@@ -50,7 +50,7 @@ class RedirectsBlueprint extends Blueprint
                                                     'searchable' => true,
                                                     'cast_booleans' => false,
                                                     'type' => 'select',
-                                                    'display' => 'Übereinstimmung',
+                                                    'display' => __('redirect::messages.match_type_display'),
                                                     'icon' => 'select',
                                                     'localizable' => false,
                                                     'width' => 33,
@@ -78,7 +78,7 @@ class RedirectsBlueprint extends Blueprint
                                                     'taggable' => false,
                                                     'push_tags' => false,
                                                     'cast_booleans' => false,
-                                                    'display' => 'Weiterleitung',
+                                                    'display' => __('redirect::messages.response_code_display'),
                                                     'default' => '301',
                                                     'type' => 'select',
                                                     'icon' => 'select',
@@ -97,7 +97,7 @@ class RedirectsBlueprint extends Blueprint
                                                     'input_type' => 'text',
                                                     'antlers' => false,
                                                     'type' => 'text',
-                                                    'display' => 'Ziel',
+                                                    'display' => __('redirect::messages.target_display'),
                                                     'icon' => 'text',
                                                     'localizable' => false,
                                                     'listable' => 'hidden',
@@ -116,7 +116,7 @@ class RedirectsBlueprint extends Blueprint
                                         ],
                                     ],
                                 ],
-                                'display' => 'Weiterleitungen',
+                                'display' => __('redirect::messages.redirects_field_display'),
                                 'type' => 'replicator',
                                 'listable' => 'hidden',
                                 'visibility' => 'visible',
