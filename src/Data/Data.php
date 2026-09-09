@@ -8,18 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use Pecotamic\Redirect\Blueprints\RedirectBlueprint;
-use Pecotamic\Redirect\Blueprints\RedirectsBlueprint;
 use Statamic\Events\EntryBlueprintFound;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Collection as CollectionAPI;
-use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
 use Statamic\Support\Str;
 
 class Data
 {
-    private const HANDLE = 'pecotamic_redirects';
-
     private const COLLECTION_HANDLE = 'redirects';
 
     private ?array $exactRedirects = null;
@@ -51,16 +47,6 @@ class Data
 
     public static function setup()
     {
-        if (! GlobalSet::findByHandle(self::HANDLE)) {
-            $globalSet = GlobalSet::make(self::HANDLE)
-                ->title('Redirects')
-                ->save();
-
-            $globalSet->makeLocalization(Site::default()->handle())->save();
-        }
-
-        Blueprint::setFallback('globals.'.self::HANDLE, fn () => RedirectsBlueprint::make());
-
         if (! CollectionAPI::findByHandle(self::COLLECTION_HANDLE)) {
             CollectionAPI::make(self::COLLECTION_HANDLE)
                 ->title('Redirects')
