@@ -6,15 +6,18 @@ namespace Pecotamic\Redirect\Data;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Pecotamic\Redirect\Blueprints\RedirectsBlueprint;
+use Illuminate\Support\Facades\Event;
+use Pecotamic\Redirect\Blueprints\RedirectBlueprint;
+use Statamic\Events\EntryBlueprintFound;
 use Statamic\Facades\Blueprint;
-use Statamic\Facades\GlobalSet;
+use Statamic\Facades\Collection as CollectionAPI;
+use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Site;
 use Statamic\Support\Str;
 
 class Data
 {
-    private const HANDLE = 'pecotamic_redirects';
+    private const COLLECTION_HANDLE = 'redirects';
 
     private ?array $exactRedirects = null;
 
@@ -24,10 +27,8 @@ class Data
 
     public function redirects(): \Generator
     {
-        foreach ($this->data['redirects'] ?? [] as $data) {
-            if ($data['enabled'] ?? true) {
-                yield new Redirect($data);
-            }
+        foreach ($this->data as $data) {
+            yield new Redirect($data);
         }
     }
 
@@ -35,21 +36,57 @@ class Data
     {
         $site = Site::get($request->site ?? '') ?? Site::selected();
 
-        return new self(GlobalSet::findByHandle(self::HANDLE)
-            ->localizations()[$site->handle()]->data());
+        $entries = CollectionAPI::findByHandle(self::COLLECTION_HANDLE)
+            ->queryEntries()
+            ->where('site', $site->handle())
+            ->where('published', true)
+            ->get()
+            ->map(fn ($entry) => $entry->data()->only(['request_uri', 'match_type', 'response_code', 'target'])->all());
+
+        return new self($entries);
     }
 
     public static function setup()
     {
-        if (! GlobalSet::findByHandle(self::HANDLE)) {
-            $globalSet = GlobalSet::make(self::HANDLE)
+        if (! CollectionAPI::findByHandle(self::COLLECTION_HANDLE)) {
+            CollectionAPI::make(self::COLLECTION_HANDLE)
                 ->title('Redirects')
+                ->sites(Site::all()->map->handle())
+                ->requiresSlugs(false)
+                ->titleFormats('{{ request_uri }}')
                 ->save();
-
-            $globalSet->makeLocalization(Site::default()->handle())->save();
         }
 
-        Blueprint::setFallback('globals.'.self::HANDLE, fn () => RedirectsBlueprint::make());
+        if (! Blueprint::find('collections.'.self::COLLECTION_HANDLE.'.redirect')) {
+            RedirectBlueprint::make()
+                ->setHandle('redirect')
+                ->setNamespace('collections.'.self::COLLECTION_HANDLE)
+                ->save();
+        }
+
+        // The entry blueprint is persisted to disk (Statamic discovers collection
+        // entry blueprints purely via a directory scan, with no fallback-closure
+        // mechanism like globals have). Refresh its field labels on every request
+        // so they still follow the current locale instead of staying frozen at
+        // whatever they were when the file was first written.
+        Event::listen(EntryBlueprintFound::class, function (EntryBlueprintFound $event) {
+            if ($event->blueprint->namespace() === 'collections.'.self::COLLECTION_HANDLE
+                && $event->blueprint->handle() === 'redirect') {
+                $event->blueprint->setContents(RedirectBlueprint::make()->contents());
+            }
+        });
+
+        // Give the collection its own top-level nav entry instead of leaving it
+        // in the general "Collections" list, where it would sit alongside actual
+        // content collections like blog posts or pages.
+        Nav::extend(function ($nav) {
+            $nav->remove('Content', 'Collections', 'Redirects');
+
+            $nav->content('Redirects')
+                ->route('collections.show', self::COLLECTION_HANDLE)
+                ->icon('link')
+                ->can('view', CollectionAPI::findByHandle(self::COLLECTION_HANDLE));
+        });
     }
 
     public function redirectMatching(string $url): ?Redirect

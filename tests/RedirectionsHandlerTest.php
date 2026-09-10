@@ -6,7 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Pecotamic\Redirect\Data\Data;
 use Pecotamic\Redirect\Http\Middleware\RedirectionsHandler;
-use Statamic\Facades\GlobalSet;
+use Statamic\Facades\Entry;
 use Statamic\Facades\Site;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -19,11 +19,16 @@ class RedirectionsHandlerTest extends TestCase
         Data::setup();
     }
 
+    protected function tearDown(): void
+    {
+        Entry::query()->where('collection', 'redirects')->get()->each->delete();
+
+        parent::tearDown();
+    }
+
     public function test_it_returns_a_redirect_response_for_301(): void
     {
-        $this->setRedirects([
-            $this->redirect('/old', 'exact', 301, '/new'),
-        ]);
+        $this->createRedirect('/old', 'exact', 301, '/new');
 
         $response = $this->handle('/old');
 
@@ -34,9 +39,7 @@ class RedirectionsHandlerTest extends TestCase
 
     public function test_it_aborts_with_the_configured_status_code(): void
     {
-        $this->setRedirects([
-            $this->redirect('/gone', 'exact', 410, null),
-        ]);
+        $this->createRedirect('/gone', 'exact', 410, null);
 
         try {
             $this->handle('/gone');
@@ -48,9 +51,16 @@ class RedirectionsHandlerTest extends TestCase
 
     public function test_it_passes_through_to_next_when_nothing_matches(): void
     {
-        $this->setRedirects([]);
-
         $result = $this->handle('/unmatched');
+
+        $this->assertSame('next-called', $result);
+    }
+
+    public function test_it_ignores_unpublished_redirects(): void
+    {
+        $this->createRedirect('/old', 'exact', 301, '/new', published: false);
+
+        $result = $this->handle('/old');
 
         $this->assertSame('next-called', $result);
     }
@@ -63,22 +73,18 @@ class RedirectionsHandlerTest extends TestCase
         return $handler->handle($request, fn ($req) => 'next-called');
     }
 
-    private function setRedirects(array $redirects): void
+    private function createRedirect(string $requestUri, string $matchType, int $responseCode, ?string $target, bool $published = true): void
     {
-        GlobalSet::findByHandle('pecotamic_redirects')
-            ->in(Site::default()->handle())
-            ->data(['redirects' => $redirects])
+        Entry::make()
+            ->collection('redirects')
+            ->locale(Site::default()->handle())
+            ->published($published)
+            ->data([
+                'request_uri' => $requestUri,
+                'match_type' => $matchType,
+                'response_code' => $responseCode,
+                'target' => $target,
+            ])
             ->save();
-    }
-
-    private function redirect(string $requestUri, string $matchType, int $responseCode, ?string $target): array
-    {
-        return [
-            'enabled' => true,
-            'request_uri' => $requestUri,
-            'match_type' => $matchType,
-            'response_code' => $responseCode,
-            'target' => $target,
-        ];
     }
 }

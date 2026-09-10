@@ -3,7 +3,7 @@
 namespace Tests;
 
 use Illuminate\Support\Facades\Validator;
-use Pecotamic\Redirect\Blueprints\RedirectsBlueprint;
+use Pecotamic\Redirect\Blueprints\RedirectBlueprint;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class TargetFieldValidationTest extends TestCase
@@ -51,7 +51,7 @@ class TargetFieldValidationTest extends TestCase
 
     private function targetFieldRules(): array
     {
-        return $this->findFieldConfig(RedirectsBlueprint::make()->contents(), 'target')['validate'];
+        return $this->findFieldConfig(RedirectBlueprint::make()->contents(), 'target')['validate'];
     }
 
     private function findFieldConfig(array $node, string $handle): ?array

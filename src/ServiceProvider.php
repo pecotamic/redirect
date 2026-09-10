@@ -17,19 +17,7 @@ class ServiceProvider extends AddonServiceProvider
             app('router')->prependMiddlewareToGroup('statamic.web', RedirectionsHandler::class);
             app('router')->prependMiddlewareToGroup('web', RedirectionsHandler::class);
 
-            return $this->bootGlobalSet();
+            Data::setup();
         });
-    }
-
-    public function globalSetHandle(): string
-    {
-        return 'pecotamic_redirects';
-    }
-
-    public function bootGlobalSet(): self
-    {
-        Data::setup();
-
-        return $this;
     }
 }

@@ -1,9 +1,6 @@
 <?php
 
 return [
-    'section_display' => 'Weiterleitungen',
-    'redirects_field_display' => 'Weiterleitungen',
-    'redirect_set_display' => 'Weiterleitung',
     'request_uri_display' => 'Request-URI',
     'match_type_display' => 'Übereinstimmung',
     'match_type_option_exact' => 'Genau',
