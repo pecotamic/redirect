@@ -36,4 +36,4 @@ Versions up to 1.1.1 stored redirects in a single "Weiterleitungen" global set i
 php artisan pecotamic:redirects:migrate
 ```
 
-This copies existing redirects into the new collection (an unpublished/disabled rule stays unpublished). It's safe to run more than once &mdash; existing entries are skipped, not duplicated. The old global set is left untouched, so you can verify the result before removing it yourself.
+This copies existing redirects into the new collection (an unpublished/disabled rule stays unpublished), then deletes the old global set. It's safe to run more than once &mdash; existing entries are skipped, not duplicated.

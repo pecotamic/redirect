@@ -42,6 +42,17 @@ class MigrateRedirectsCommandTest extends TestCase
         $this->assertSame('/new', $entries['/old']->get('target'));
     }
 
+    public function test_it_deletes_the_old_global_set_after_migrating(): void
+    {
+        $this->createLegacyGlobalSet([
+            ['enabled' => true, 'request_uri' => '/old', 'match_type' => 'exact', 'response_code' => 301, 'target' => '/new'],
+        ]);
+
+        $this->artisan('pecotamic:redirects:migrate')->assertExitCode(0);
+
+        $this->assertNull(GlobalSet::findByHandle('pecotamic_redirects'));
+    }
+
     public function test_it_is_safe_to_run_twice(): void
     {
         $this->createLegacyGlobalSet([

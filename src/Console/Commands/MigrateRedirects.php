@@ -55,6 +55,9 @@ class MigrateRedirects extends Command
 
         $this->info("Migrated {$migrated} redirect(s), skipped {$skipped} already present.");
 
+        $globalSet->delete();
+        $this->info('Removed the old "pecotamic_redirects" global set.');
+
         return self::SUCCESS;
     }
 
