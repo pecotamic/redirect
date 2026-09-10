@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ruleset name="Pecotamic Redirect">
+    <description>PSR-12, matching the style Laravel Pint already enforces in this repo.</description>
+    <file>src</file>
+    <file>tests</file>
+    <rule ref="PSR12">
+        <!-- Conflicts with Pint's single_line_empty_body fixer, which this repo
+             deliberately uses for empty method bodies like constructors. -->
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore"/>
+        <!-- Pint's concat_space fixer removes spaces around "."; PSR12 wants
+             them. This sniff also covers every other operator (=, ==, &&, +, ...),
+             but Pint's own fixers (binary_operator_spaces etc.) already enforce
+             spacing there, so excluding it doesn't lose real coverage. -->
+        <exclude name="PSR12.Operators.OperatorSpacing.NoSpaceBefore"/>
+        <exclude name="PSR12.Operators.OperatorSpacing.NoSpaceAfter"/>
+        <!-- Pint's new_with_parentheses fixer removes "()" from bare
+             constructor calls like "new Foo"; PSR12 wants them. -->
+        <exclude name="PSR12.Classes.ClassInstantiation.MissingParentheses"/>
+        <!-- snake_case test method names (test_it_does_x) are the established
+             PHPUnit convention across this codebase and the wider Laravel ecosystem. -->
+        <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+    </rule>
+    <!-- Pint doesn't enforce a line length limit either. -->
+    <rule ref="Generic.Files.LineLength">
+        <severity>0</severity>
+    </rule>
+</ruleset>

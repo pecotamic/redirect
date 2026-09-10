@@ -70,8 +70,10 @@ class Data
         // so they still follow the current locale instead of staying frozen at
         // whatever they were when the file was first written.
         Event::listen(EntryBlueprintFound::class, function (EntryBlueprintFound $event) {
-            if ($event->blueprint->namespace() === 'collections.'.self::COLLECTION_HANDLE
-                && $event->blueprint->handle() === 'redirect') {
+            if (
+                $event->blueprint->namespace() === 'collections.'.self::COLLECTION_HANDLE
+                && $event->blueprint->handle() === 'redirect'
+            ) {
                 $event->blueprint->setContents(RedirectBlueprint::make()->contents());
             }
         });

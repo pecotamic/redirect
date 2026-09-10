@@ -6,11 +6,11 @@ use Statamic\Support\Traits\FluentlyGetsAndSets;
 
 class Redirect
 {
+    use FluentlyGetsAndSets;
+
     public const MATCH_TYPE_EXACT = 'exact';
 
     public const MATCH_TYPE_STARTS_WITH = 'starts_with';
-
-    use FluentlyGetsAndSets;
 
     protected string $requestUri;
 

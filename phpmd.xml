@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ruleset name="Pecotamic Redirect"
+    xmlns="http://pmd.sf.net/ruleset/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+    xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>
+        Default PHPMD rules, minus a few that conflict with conventions
+        already established in this codebase (see comments below).
+    </description>
+
+    <rule ref="rulesets/cleancode.xml">
+        <!-- Calling Laravel/Statamic facades statically is the idiomatic,
+             intended way to use them, not a code smell. -->
+        <exclude name="StaticAccess"/>
+        <!-- `if ($x = expr())` is used deliberately throughout this codebase
+             as an early-return guard clause, not an accidental `=`/`==` typo. -->
+        <exclude name="IfStatementAssignment"/>
+        <!-- Flags e.g. the `bool $published = true` test helper parameter;
+             not worth splitting into two methods for a private test helper. -->
+        <exclude name="BooleanArgumentFlag"/>
+    </rule>
+    <rule ref="rulesets/codesize.xml"/>
+    <rule ref="rulesets/controversial.xml">
+        <!-- snake_case test method names (test_it_does_x) are the established
+             PHPUnit convention across this codebase and the wider Laravel
+             ecosystem. -->
+        <exclude name="CamelCaseMethodName"/>
+    </rule>
+    <rule ref="rulesets/design.xml"/>
+    <rule ref="rulesets/naming.xml"/>
+    <rule ref="rulesets/unusedcode.xml">
+        <!-- Statamic's FluentlyGetsAndSets trait reads arguments via
+             func_get_args() rather than the named parameter, so every
+             getter/setter built on it (see Redirect.php) false-positives here. -->
+        <exclude name="UnusedFormalParameter"/>
+    </rule>
+</ruleset>
