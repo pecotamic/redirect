@@ -17,7 +17,7 @@ use Statamic\Support\Str;
 
 class Data
 {
-    private const COLLECTION_HANDLE = 'redirects';
+    public const COLLECTION_HANDLE = 'redirects';
 
     private ?array $exactRedirects = null;
 

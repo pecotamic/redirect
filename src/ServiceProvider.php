@@ -4,11 +4,17 @@ namespace Pecotamic\Redirect;
 
 use Pecotamic\Redirect\Data\Data;
 use Pecotamic\Redirect\Http\Middleware\RedirectionsHandler;
+use Pecotamic\Redirect\Listeners\InvalidateStaticCache;
+use Statamic\Events\EntrySaved;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $listen = [
+        EntrySaved::class => [InvalidateStaticCache::class],
+    ];
+
     public function boot(): void
     {
         parent::boot();
