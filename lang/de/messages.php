@@ -7,4 +7,5 @@ return [
     'match_type_option_starts_with' => 'Beginnt mit',
     'response_code_display' => 'Weiterleitung',
     'target_display' => 'Ziel',
+    'request_uri_must_be_path' => 'Bitte nur den Pfad angeben, z. B. /alte-seite – ohne Protokoll und Domain.',
 ];

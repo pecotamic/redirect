@@ -2,6 +2,7 @@
 
 namespace Pecotamic\Redirect\Blueprints;
 
+use Pecotamic\Redirect\Rules\RequestUriPath;
 use Statamic\Facades\Blueprint;
 
 class RedirectBlueprint extends Blueprint
@@ -19,7 +20,7 @@ class RedirectBlueprint extends Blueprint
                         'antlers' => false,
                         'width' => 66,
                         'listable' => true,
-                        'validate' => ['required'],
+                        'validate' => ['required', 'new \\'.RequestUriPath::class],
                     ],
                 ],
                 [
